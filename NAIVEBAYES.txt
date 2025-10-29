@@ -1,0 +1,53 @@
+# ---- Naive Bayes Classifier ----
+
+# Step 1: Dataset (PlayTennis example)
+dataset = [
+    ['Sunny', 'Hot', 'High', 'Weak', 'No'],
+    ['Sunny', 'Hot', 'High', 'Strong', 'No'],
+    ['Overcast', 'Hot', 'High', 'Weak', 'Yes'],
+    ['Rain', 'Mild', 'High', 'Weak', 'Yes'],
+    ['Rain', 'Cool', 'Normal', 'Weak', 'Yes'],
+    ['Rain', 'Cool', 'Normal', 'Strong', 'No'],
+    ['Overcast', 'Cool', 'Normal', 'Strong', 'Yes']
+]
+
+# Step 2: Separate dataset by class label (Yes/No)
+def separate_by_class(data):
+    separated = {}
+    for row in data:
+        label = row[-1]
+        if label not in separated:
+            separated[label] = []
+        separated[label].append(row)
+    return separated
+
+# Step 3: Calculate probability of a given attribute value within a class
+def calculate_prob(attr_index, value, data):
+    count = sum(1 for row in data if row[attr_index] == value)
+    return count / len(data)
+
+# Step 4: Predict class for a given test case
+def predict(test):
+    separated = separate_by_class(dataset)
+    probs = {}
+    for label, rows in separated.items():
+        probs[label] = 1
+        for i in range(len(test)):
+            probs[label] *= calculate_prob(i, test[i], rows)
+    return max(probs, key=probs.get)
+
+# Step 5: Test the classifier
+test_case = ['Sunny', 'Cool', 'High', 'Strong']
+print("Prediction:", predict(test_case))
+
+# -------------------------------
+# HOW TO RUN IN TERMINAL:
+# 1. Save this file as naive_bayes.py
+# 2. Open terminal / command prompt.
+# 3. Navigate to the folder containing the file.
+# 4. Run the command:
+#       python naive_bayes.py
+#
+# Expected Output:
+#       Prediction: No
+# -------------------------------
