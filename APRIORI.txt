@@ -1,0 +1,76 @@
+# ---- Apriori Algorithm ----
+
+from itertools import combinations
+
+# Step 1: Transactions
+transactions = [
+    {'A', 'B', 'C'},
+    {'A', 'C'},
+    {'A', 'D'},
+    {'B', 'E'},
+    {'A', 'B', 'E'}
+]
+
+# Step 2: Minimum support threshold
+min_support = 2
+
+# Step 3: Generate candidate 1-itemsets
+items = set()
+for t in transactions:
+    items |= t
+candidates = [{i} for i in items]
+
+# Function to count support
+def support_count(itemset):
+    return sum(1 for t in transactions if itemset <= t)
+
+frequent = []
+k = 1
+
+# Step 4: Generate frequent itemsets iteratively
+while candidates:
+    print(f"\nFrequent Itemsets of size {k}:")
+    next_candidates = []
+
+    for c in candidates:
+        count = support_count(c)
+        if count >= min_support:
+            print(c, "=>", count)
+            frequent.append(c)
+            # Generate next-level candidates
+            next_candidates.extend([c | {i} for i in items if i not in c])
+
+    # Remove duplicates and ensure correct size
+    candidates = []
+    for c in next_candidates:
+        if c not in candidates and len(c) == k + 1:
+            candidates.append(c)
+
+    k += 1
+
+# ------------------------------------------
+# HOW TO RUN IN TERMINAL:
+# 1. Save this file as apriori.py
+# 2. Open terminal / command prompt.
+# 3. Navigate to the folder containing the file.
+# 4. Run the command:
+#       python apriori.py
+#
+# Expected Output (sample):
+# Frequent Itemsets of size 1:
+# {'E'} => 2
+# {'C'} => 2
+# {'A'} => 4
+# {'B'} => 2
+#
+# Frequent Itemsets of size 2:
+# {'A', 'E'} => 1
+# {'A', 'B'} => 2
+# {'A', 'C'} => 2
+#
+# (and so on until no more frequent itemsets)
+#
+# Explanation:
+# - The algorithm finds all sets of items that appear
+#   together in at least 'min_support' transactions.
+# ------------------------------------------
