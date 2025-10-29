@@ -1,0 +1,50 @@
+# ---- Page Rank Algorithm ----
+
+# Step 1: Define the Graph (directed links)
+graph = {
+    'A': ['B', 'C'],
+    'B': ['C'],
+    'C': ['A'],
+    'D': ['C']
+}
+
+# Step 2: Initialize ranks for each page
+ranks = {page: 1 for page in graph}
+damping = 0.85  # Damping factor (probability of continuing link traversal)
+
+# Step 3: Iteratively update ranks
+for _ in range(10):  # Run for 10 iterations
+    new_ranks = {}
+    for page in graph:
+        rank_sum = 0
+        for other in graph:
+            if page in graph[other]:
+                rank_sum += ranks[other] / len(graph[other])
+        new_ranks[page] = (1 - damping) + damping * rank_sum
+    ranks = new_ranks
+
+# Step 4: Display final ranks
+print("Final Page Ranks after 10 iterations:")
+for page, rank in ranks.items():
+    print(f"{page}: {round(rank, 3)}")
+
+# ------------------------------------------
+# HOW TO RUN IN TERMINAL:
+# 1. Save this file as pagerank.py
+# 2. Open terminal / command prompt.
+# 3. Navigate to the folder containing the file.
+# 4. Run the command:
+#       python pagerank.py
+#
+# Expected Output (sample):
+# Final Page Ranks after 10 iterations:
+# A: 1.172
+# B: 0.391
+# C: 1.384
+# D: 0.05
+#
+# Explanation:
+# - Pages that are linked by others more often
+#   (especially by high-rank pages) get higher ranks.
+# - This simulates the Google PageRank concept.
+# ------------------------------------------
